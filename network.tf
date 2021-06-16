@@ -37,8 +37,11 @@ resource "aws_default_route_table" "drt_public" {
 
 resource "aws_subnet" "subnet_public" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.1.0.0/21"
   map_public_ip_on_launch = true
+  for_each                = var.subnet_az_cidr["public"]
+  availability_zone       = each.key
+  cidr_block              = each.value
+
   tags = merge(
     var.aws_default_tags,
     {
@@ -60,7 +63,7 @@ resource "aws_eip" "eip" {
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.eip.id
-  subnet_id     = aws_subnet.subnet_public.id
+  subnet_id     = element(values(aws_subnet.subnet_public).*.id, 0)
   depends_on    = [aws_eip.eip, aws_subnet.subnet_public]
   tags = merge(
     var.aws_default_tags,
@@ -86,8 +89,10 @@ resource "aws_route_table" "rt_private" {
 }
 
 resource "aws_subnet" "subnet_private" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.1.80.0/21"
+  vpc_id            = aws_vpc.main.id
+  for_each          = var.subnet_az_cidr["private"]
+  availability_zone = each.key
+  cidr_block        = each.value
   tags = merge(
     var.aws_default_tags,
     {
@@ -97,7 +102,8 @@ resource "aws_subnet" "subnet_private" {
 }
 
 resource "aws_route_table_association" "rt_association_subnet_private" {
-  subnet_id      = aws_subnet.subnet_private.id
+  count          = length(aws_subnet.subnet_private[*])
+  subnet_id      = element(values(aws_subnet.subnet_private).*.id, count.index)
   route_table_id = aws_route_table.rt_private.id
   depends_on     = [aws_route_table.rt_private, aws_subnet.subnet_private]
 }

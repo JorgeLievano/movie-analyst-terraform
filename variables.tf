@@ -4,6 +4,13 @@ variable "ami_ubuntu" {
   default     = "ami-0d382e80be7ffdae5"
 }
 
+variable "availability_zones" {
+  description = "Availability zones used set"
+  type        = list(string)
+  default     = ["us-west-1a", "us-west-1c"]
+
+}
+
 variable "aws_default_tags" {
   description = "Default tags for rampup resources"
   type        = map(string)
@@ -17,4 +24,20 @@ variable "key_pair_name" {
   description = "Key pair for SSH instances connection"
   type        = string
   default     = "jlievanos-rampup-devops"
+}
+
+variable "subnet_az_cidr" {
+  description = "az and cidr blocks for public and private subnets"
+  type        = map(map(string))
+  default = {
+    private = {
+      us-west-1a = "10.1.80.0/21"
+      us-west-1c = "10.1.88.0/21"
+    }
+    public = {
+      us-west-1a = "10.1.0.0/21"
+      us-west-1c = "10.1.8.0/21"
+    }
+  }
+
 }
