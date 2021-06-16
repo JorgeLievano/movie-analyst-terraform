@@ -5,7 +5,7 @@ terraform {
     }
   }
 }
-
+#replace for the alb dns or domain
 output "ui_public_ip" {
-  value = aws_instance.ui.public_ip
+  value = aws_lb.alb_ui.dns_name
 }
