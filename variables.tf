@@ -4,6 +4,30 @@ variable "ami_ubuntu" {
   default     = "ami-0d382e80be7ffdae5"
 }
 
+variable "api_blue_enable" {
+  description = "Value for enable blue api environment"
+  type        = bool
+  default     = false
+}
+
+variable "api_blue_running" {
+  description = "Value for start blue env api running"
+  type        = bool
+  default     = false
+}
+
+variable "api_green_enable" {
+  description = "Value for enable green api environment"
+  type        = bool
+  default     = false
+}
+
+variable "api_green_running" {
+  description = "Value for start green env api running"
+  type        = bool
+  default     = false
+}
+
 variable "availability_zones" {
   description = "Availability zones used set"
   type        = list(string)
@@ -40,4 +64,28 @@ variable "subnet_az_cidr" {
     }
   }
 
+}
+
+variable "ui_blue_enable" {
+  description = "Value for enable blue ui environment"
+  type        = bool
+  default     = false
+}
+
+variable "ui_blue_running" {
+  description = "Value for start blue env ui running"
+  type        = bool
+  default     = false
+}
+
+variable "ui_green_enable" {
+  description = "Value for enable green ui environment"
+  type        = bool
+  default     = false
+}
+
+variable "ui_green_running" {
+  description = "Value for start green env ui running"
+  type        = bool
+  default     = false
 }
